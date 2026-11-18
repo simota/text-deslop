@@ -1,7 +1,7 @@
 # AGENTS.md
 
 Agent skill `text-deslop` (`skills/text-deslop/SKILL.md`): rewrites Japanese and English
-documents until no machine-generated style remains, modelled on security-scan's
+documents until no machine-generated style remains, built on a
 phase, run-contract and contract-check structure.
 
 - `make check` before reporting done (it runs the tests).
