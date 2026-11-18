@@ -360,6 +360,9 @@ def assign_genres(values, files, root, rules):
             named[path] = gid
         else:
             default = gid
+    # Files are compared resolved, so root must be too: a root reached through a
+    # symlink (on macOS /var is one to /private/var) is otherwise not their parent.
+    root = Path(root).resolve()
     rels = {Path(f).resolve(): Path(f).resolve().relative_to(root).as_posix() for f in files}
     out = {rel: default or infer_genre(rel, rules) for rel in rels.values()}
     # (depth, rel) -> genre: a file is deeper than any directory holding it.

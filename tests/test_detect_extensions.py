@@ -64,6 +64,14 @@ class DirectoryGenreTests(Workspace):
     def genres(self, *values):
         return common.assign_genres(list(values), self.files, self.tmp, self.rules)
 
+    def test_a_root_reached_through_a_symlink_maps_the_same_targets(self):
+        link = self.tmp.parent / (self.tmp.name + "-link")
+        link.symlink_to(self.tmp, target_is_directory=True)
+        self.addCleanup(link.unlink)
+        through = common.assign_genres(["docs/api=reference"], self.files, link, self.rules)
+        self.assertEqual(through, self.genres("docs/api=reference"))
+        self.assertEqual(through["docs/api/a.md"], "reference")
+
     def test_a_directory_genre_reaches_every_target_below_it(self):
         g = self.genres("docs/api=reference")
         self.assertEqual(g["docs/api/a.md"], "reference")
