@@ -9,8 +9,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import test_deslop  # noqa: E402
-from test_deslop import EXAMPLES, load_json  # noqa: E402
+import test_text_deslop  # noqa: E402
+from test_text_deslop import EXAMPLES, load_json  # noqa: E402
 
 import comparison  # noqa: E402
 import detect  # noqa: E402
@@ -30,11 +30,11 @@ def tree(path):
 class StatusTests(unittest.TestCase):
     # Borrow the run helpers without importing the TestCase itself, so
     # discovery does not run RunContractTests a second time from this module.
-    setUp = test_deslop.RunContractTests.setUp
-    tearDown = test_deslop.RunContractTests.tearDown
-    fragment = test_deslop.RunContractTests.fragment
-    setUp_quiet = test_deslop.RunContractTests.setUp_quiet
-    complete_run = test_deslop.RunContractTests.complete_run
+    setUp = test_text_deslop.RunContractTests.setUp
+    tearDown = test_text_deslop.RunContractTests.tearDown
+    fragment = test_text_deslop.RunContractTests.fragment
+    setUp_quiet = test_text_deslop.RunContractTests.setUp_quiet
+    complete_run = test_text_deslop.RunContractTests.complete_run
 
     def snapshot(self, *extra):
         self.setUp_quiet()
@@ -67,12 +67,12 @@ class StatusTests(unittest.TestCase):
         accounting = by_step["accounting"]["todo"]
         self.assertTrue(any(item.startswith("guide.md JA-04 x3 at line 13, 14, 15") for item in accounting), accounting)
         perspectives = by_step["perspectives"]["todo"]
-        self.assertEqual(len(perspectives), len(test_deslop.RULES["perspectives"]))
+        self.assertEqual(len(perspectives), len(test_text_deslop.RULES["perspectives"]))
         self.assertTrue(any(p.startswith("STR-02 ") and "cannot be N/A" in p for p in perspectives))
 
     def test_detection_of_other_originals_is_not_current(self):
         self.snapshot()
-        (self.out / "detect.before.json").write_text(json.dumps({"tool": "deslop-detect", "files": [
+        (self.out / "detect.before.json").write_text(json.dumps({"tool": "text-deslop-detect", "files": [
             {"path": "guide.md", "sha256": "0" * 64}]}), encoding="utf-8")
         self.assertFalse(steps(status.collect(self.out))["detect.before"]["done"])
 
@@ -157,7 +157,7 @@ class StatusTests(unittest.TestCase):
         code, text = self.main("--json")
         self.assertEqual(code, 1)
         data = json.loads(text)
-        self.assertEqual(data["tool"], "deslop-status")
+        self.assertEqual(data["tool"], "text-deslop-status")
         self.assertEqual(data["next"]["step"], "detect.before")
         _, text = self.main("--limit", "2")
         self.assertIn("more (--limit 0 shows all)", text)

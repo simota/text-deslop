@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES = ROOT / "examples"
-SCRIPTS = ROOT / "skills" / "deslop" / "scripts"
+SCRIPTS = ROOT / "skills" / "text-deslop" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 import common  # noqa: E402
@@ -162,13 +162,13 @@ class SelectionTests(Workspace):
 class InlineIgnoreTests(Workspace):
     DOC = """# Title
 
-Robust statistics are robust here. <!-- deslop-ignore EN-04: "robust statistics" is the field's term -->
+Robust statistics are robust here. <!-- text-deslop-ignore EN-04: "robust statistics" is the field's term -->
 
-<!-- deslop-ignore EN-14: a product tagline quoted by legal -->
+<!-- text-deslop-ignore EN-14: a product tagline quoted by legal -->
 A comprehensive and seamless tool.
 
 ```md
-<!-- deslop-ignore EN-04: shown as an example -->
+<!-- text-deslop-ignore EN-04: shown as an example -->
 robust example
 ```
 """
@@ -199,16 +199,16 @@ robust example
         self.write("doc.md", body + "\n")
         _, before, _, _ = self.scan_json("doc.md")
         self.assertIn("DEN-08", {h["rule"] for h in before["hits"] if not h["exempt"]})
-        self.write("doc.md", "<!-- deslop-ignore-file DEN-08: a glossary, one line per term -->\n\n" + body + "\n")
+        self.write("doc.md", "<!-- text-deslop-ignore-file DEN-08: a glossary, one line per term -->\n\n" + body + "\n")
         code, after, _, _ = self.scan_json("doc.md")
         self.assertEqual([h["exempt_by"] for h in after["hits"] if h["rule"] == "DEN-08"], ["inline"])
         self.assertEqual(code, 0)
 
     def test_invalid_artifact_and_unused_directives_are_reported_without_effect(self):
-        self.write("doc.md", "I hope this helps. <!-- deslop-ignore ART-03: it is our sign-off -->\n\n"
-                             "<!-- deslop-ignore EN-04 forgot the colon -->\nIt is robust.\n\n"
-                             "<!-- deslop-ignore-file EN-01, ZZ-01: typo -->\n"
-                             "<!-- deslop-ignore-file EN-01: nothing delves here -->\n")
+        self.write("doc.md", "I hope this helps. <!-- text-deslop-ignore ART-03: it is our sign-off -->\n\n"
+                             "<!-- text-deslop-ignore EN-04 forgot the colon -->\nIt is robust.\n\n"
+                             "<!-- text-deslop-ignore-file EN-01, ZZ-01: typo -->\n"
+                             "<!-- text-deslop-ignore-file EN-01: nothing delves here -->\n")
         code, data, out, err = self.scan_json("doc.md")
         self.assertEqual(code, 1)
         self.assertEqual(data["summary"]["open"], 2)
@@ -218,7 +218,7 @@ robust example
         self.assertIn("reason", errors[1])
         self.assertIn("unknown rule 'ZZ-01'", errors[2])
         self.assertEqual([d["unused"] for d in data["ignores"] if "unused" in d], [["EN-01"]])
-        self.assertIn("doc.md:7 deslop-ignore unused: EN-01 covers no hit", out)
+        self.assertIn("doc.md:7 text-deslop-ignore unused: EN-01 covers no hit", out)
         self.assertIn("(1 unused and 3 invalid directives)", err)
         code, gh, _ = run(detect, "doc.md", "--format", "github")
         self.assertEqual(gh.count("::warning file=doc.md"), 4)
@@ -229,7 +229,7 @@ robust example
         self.assertNotIn("ignores", data)
         self.assertNotIn("inline", data["summary"])
         self.assertFalse([h for h in data["hits"] if h.get("exempt_by") == "inline"])
-        self.write("doc.txt", "It is robust. <!-- deslop-ignore EN-04: plain text has no comments -->\n")
+        self.write("doc.txt", "It is robust. <!-- text-deslop-ignore EN-04: plain text has no comments -->\n")
         _, data, _, _ = self.scan_json("doc.txt")
         self.assertEqual(data["summary"]["open"], 1)
 
@@ -240,7 +240,7 @@ robust example
         self.assertEqual(set(data["summary"]), {"files", "total", "open", "exempt", "by_rule", "cues"})
 
     def test_a_directive_for_an_unselected_rule_is_not_unused(self):
-        self.write("doc.md", "It is robust. <!-- deslop-ignore EN-04: term -->\n")
+        self.write("doc.md", "It is robust. <!-- text-deslop-ignore EN-04: term -->\n")
         _, data, _, _ = self.scan_json("doc.md", "--select", "artifact")
         self.assertEqual(data["ignores"][0]["unused"], [])
 
@@ -263,7 +263,7 @@ class MarkdownDiagnosisTests(Workspace):
         self.assertIn("| 9:3 | Install › Linux | EN-04 | <code>seamless</code> |", out)
         self.assertIn("| 13:", out)
         self.assertIn("| Use | EN-04 |", out)
-        self.assertTrue(out.startswith("# deslop diagnosis\n"))
+        self.assertTrue(out.startswith("# text-deslop diagnosis\n"))
 
     def test_cells_cannot_break_the_table(self):
         self.assertEqual(diagnosis.code("a|b <c>"), "<code>a&#124;b &lt;c&gt;</code>")

@@ -20,8 +20,8 @@ import sys
 import serve
 
 DATA = serve.SITE / "data.js"
-REFERENCE = serve.ROOT / "skills" / "deslop" / "reference"
-PREFIX, SUFFIX = "window.DESLOP_DATA = ", ";\n"
+REFERENCE = serve.ROOT / "skills" / "text-deslop" / "reference"
+PREFIX, SUFFIX = "window.TEXT_DESLOP_DATA = ", ";\n"
 ENTRY = re.compile(r"### `([A-Z]+-\d+)`[ \t]*$")
 
 

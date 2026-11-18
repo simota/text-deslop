@@ -4,7 +4,7 @@ import tracemalloc
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "skills" / "deslop" / "scripts"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "skills" / "text-deslop" / "scripts"))
 
 import preserve_check  # noqa: E402
 

@@ -1,6 +1,6 @@
-# deslop — install helpers
+# text-deslop — install helpers
 #
-#   make link      symlink skills/deslop into every installed host's skills dir
+#   make link      symlink skills/text-deslop into every installed host's skills dir
 #   make unlink    remove those symlinks
 #   make status    show what is installed, per host
 #   make test      run offline regression tests
@@ -14,14 +14,14 @@
 #   make link PROJECT=/path/to/repo    # that project's .claude/skills instead
 #   make link SKILLS_DIR=/some/path    # one literal path; AGENT unused
 
-NAME    := deslop
+NAME    := text-deslop
 PYTHON  ?= python3
 shell_quote = '$(subst ','"'"',$(1))'
-define deslop_newline
+define text_deslop_newline
 
 
 endef
-ifneq ($(findstring $(deslop_newline),$(CURDIR)$(MAKEFILE_LIST)),)
+ifneq ($(findstring $(text_deslop_newline),$(CURDIR)$(MAKEFILE_LIST)),)
 $(error newlines in checkout or Makefile paths are not supported)
 endif
 # Make's path functions split on spaces, including spaces in the checkout.

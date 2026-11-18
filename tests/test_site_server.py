@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "site"))
-sys.path.insert(0, str(ROOT / "skills" / "deslop" / "scripts"))
+sys.path.insert(0, str(ROOT / "skills" / "text-deslop" / "scripts"))
 
 import detect  # noqa: E402
 import serve  # noqa: E402
@@ -23,7 +23,7 @@ BEFORE = (ROOT / "examples" / "before.en.md").read_text(encoding="utf-8")
 class SiteServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.server = serve.http.server.ThreadingHTTPServer(("127.0.0.1", 0), serve.DeslopHandler)
+        cls.server = serve.http.server.ThreadingHTTPServer(("127.0.0.1", 0), serve.TextDeslopHandler)
         cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)
         cls.thread.start()
 
@@ -60,10 +60,10 @@ class SiteServerTests(unittest.TestCase):
 
     def test_scan_carries_the_markdown_diagnosis_and_honours_inline_ignores(self):
         status, data = self.post({"text": "# T\n\n## Part\n\nIt is robust.\n\n"
-                                          "Robust statistics. <!-- deslop-ignore EN-04: the field's term -->\n"})
+                                          "Robust statistics. <!-- text-deslop-ignore EN-04: the field's term -->\n"})
         self.assertEqual(status, 200)
         self.assertEqual([h["exempt_reason"] for h in data["hits"]], [None, "inline: the field's term"])
-        self.assertTrue(data["diagnosis"].startswith("# deslop diagnosis\n"))
+        self.assertTrue(data["diagnosis"].startswith("# text-deslop diagnosis\n"))
         self.assertIn("| 5:7 | Part | EN-04 | <code>robust</code> |", data["diagnosis"])
 
     def test_unknown_genre_falls_back_to_general(self):

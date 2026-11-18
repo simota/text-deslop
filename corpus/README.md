@@ -70,7 +70,7 @@ with "Write it in English." added.
 python3 -c 'import json; [print(d["genre"], "corpus/" + d["path"], "{hits} hits, {open} open, {exempt} exempt".format(**d["baseline"])) for d in json.load(open("corpus/manifest.json"))["documents"]]' |
 while read genre file baseline; do
   printf '%s (baseline: %s)\n  ' "$file" "$baseline"
-  python3 skills/deslop/scripts/detect.py --quiet --genre "$genre" -- "$file" 2>&1
+  python3 skills/text-deslop/scripts/detect.py --quiet --genre "$genre" -- "$file" 2>&1
 done
 ```
 
@@ -79,7 +79,7 @@ so a difference shows without a separate comparison.
 
 For a full run, snapshot a document in copy mode with its genre
 (`snapshot.py <out> --root corpus/<genre> --copy --genre <genre> <path>`) and
-follow `skills/deslop/SKILL.md`.
+follow `skills/text-deslop/SKILL.md`.
 
 ## Known gaps
 

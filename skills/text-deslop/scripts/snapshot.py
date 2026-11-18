@@ -70,7 +70,7 @@ def main(argv=None):
                 entries.append({"path": rel.as_posix(), "sha256": sha256_bytes(content),
                                 "genre": genres[rel.as_posix()]})
             write_json(staged / "snapshot.json", {
-                "tool": "deslop-snapshot", "root": str(root), "work": str(work),
+                "tool": "text-deslop-snapshot", "root": str(root), "work": str(work),
                 "mode": "copy" if a.copy else "in-place", "files": entries,
                 **({"workflow": "compare-three"} if a.compare else {}),
             })

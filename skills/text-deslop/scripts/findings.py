@@ -229,7 +229,7 @@ def build_report(out):
     names = {p["id"]: p["name"] for p in load_rules()["perspectives"]}
     genres = genre_table(load_rules())
     lines = [
-        f"<!-- deslop:findings-sha256={sha256_bytes(content)} -->",
+        f"<!-- text-deslop:findings-sha256={sha256_bytes(content)} -->",
         f"# {L['title']}", "",
         f"- target: {markdown_code(data['meta']['target'])} ({data['meta']['mode']})",
         f"- assessor: {cell(data['meta']['assessor'])} · {cell(data['meta']['date'])}", "",

@@ -3,7 +3,7 @@ import sys
 import unittest
 from pathlib import Path
 
-SCRIPTS = Path(__file__).resolve().parents[1] / "skills" / "deslop" / "scripts"
+SCRIPTS = Path(__file__).resolve().parents[1] / "skills" / "text-deslop" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 import common  # noqa: E402

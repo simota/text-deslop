@@ -18,7 +18,7 @@ rule), so a docs tree with existing tells can gate only new ones.
 --format github prints open hits and cues as GitHub Actions annotations;
 --format markdown prints a diagnosis by document and section (diagnosis.py).
 --select and --ignore narrow the rules by ID, family or tier, and
---list-rules prints them. Standalone scans honour <!-- deslop-ignore RULE:
+--list-rules prints them. Standalone scans honour <!-- text-deslop-ignore RULE:
 reason --> directives in Markdown (inline_ignores.py).
 
 The genre of each document (from --genre, the snapshot, or the file name)
@@ -557,7 +557,7 @@ def exemption_for(hit, path, exemptions, line="", *, line_start=0):
 def scan(files, root, rules, exemptions, genres=None, *, paths=None, contents=None, inline=False, outlines=None):
     """Scan exact file bytes, optionally supplied by a caller checking their hash.
 
-    inline applies deslop-ignore directives (inline_ignores.py); standalone
+    inline applies text-deslop-ignore directives (inline_ignores.py); standalone
     scans only. outlines, a dict, receives each path's headings as
     (line, level, text) for reports that place hits in their section."""
     compiled = compile_rules(rules)
@@ -571,7 +571,7 @@ def scan(files, root, rules, exemptions, genres=None, *, paths=None, contents=No
     if contents is not None and len(contents) != len(files):
         raise ValueError("each scanned file must have one byte content")
     genres = {**{rel: infer_genre(rel, rules) for rel in paths}, **(genres or {})}
-    result = {"tool": "deslop-detect", "rules_version": rules["version"], "root": str(root), "files": [], "hits": [], "cues": []}
+    result = {"tool": "text-deslop-detect", "rules_version": rules["version"], "root": str(root), "files": [], "hits": [], "cues": []}
     for index, (f, rel) in enumerate(zip(files, paths)):
         if genres[rel] not in table:
             raise ValueError(f"{rel}: unknown genre {genres[rel]!r}")
@@ -644,7 +644,7 @@ def load_baseline(path):
     open hits, and those an earlier baseline accepted, so a result written
     with --baseline and --out is itself the tightened baseline."""
     data = load_json(path)
-    if not isinstance(data, dict) or data.get("tool") != "deslop-detect" or not isinstance(data.get("hits"), list):
+    if not isinstance(data, dict) or data.get("tool") != "text-deslop-detect" or not isinstance(data.get("hits"), list):
         raise ValueError(f"{path} is not a detect.py result (write one with --out)")
     keys = Counter()
     for i, h in enumerate(data["hits"]):
@@ -685,17 +685,17 @@ def github_lines(result, notes):
         if h["exempt"]:
             continue
         where = f"file={_gh_escape(h['path'], True)},line={h['line']},col={h['col']}"
-        title = _gh_escape(f"deslop {h['rule']}", True)
+        title = _gh_escape(f"text-deslop {h['rule']}", True)
         yield f"::error {where},title={title}::{_gh_escape(notes.get(h['rule'], h['rule']) + ': ' + h['text'])}"
     for c in result["cues"]:
         where = f"file={_gh_escape(c['path'], True)},line={c['line']}"
-        title = _gh_escape(f"deslop {c['perspective']} cue", True)
+        title = _gh_escape(f"text-deslop {c['perspective']} cue", True)
         yield f"::notice {where},title={title}::{_gh_escape(c['why'] + ': ' + c['text'])}"
     for d in result.get("ignores", []):
         if "error" in d or d["unused"]:
             where = f"file={_gh_escape(d['path'], True)},line={d['line']}"
             why = d["error"] if "error" in d else f"{', '.join(d['unused'])} covers no hit; remove it"
-            yield f"::warning {where},title={_gh_escape('deslop-ignore', True)}::{_gh_escape(why)}"
+            yield f"::warning {where},title={_gh_escape('text-deslop-ignore', True)}::{_gh_escape(why)}"
 
 
 def scan_snapshot(out, rules, exemptions, originals=False, *, outlines=None, only=None):
@@ -775,7 +775,7 @@ def main(argv=None):
     ap.add_argument("--ignore", action="append", default=[], metavar="RULES",
                     help="leave these rule IDs, families or tiers out of the scan")
     ap.add_argument("--no-inline-ignores", action="store_true",
-                    help="disregard <!-- deslop-ignore … --> directives in the documents")
+                    help="disregard <!-- text-deslop-ignore … --> directives in the documents")
     ap.add_argument("--list-rules", action="store_true", help="print the rule catalogue (after --select/--ignore) and exit")
     ap.add_argument("--format", choices=("text", "github", "markdown"), default="text",
                     help="text (path:line:col RULE text), GitHub Actions annotations, "
@@ -860,9 +860,9 @@ def main(argv=None):
             print(f"{c['path']}:{c['line']} {c['perspective']} cue: {c['why']}: {c['text']}")
         for d in result.get("ignores", []):
             if "error" in d:
-                print(f"{d['path']}:{d['line']} deslop-ignore invalid: {d['error']}")
+                print(f"{d['path']}:{d['line']} text-deslop-ignore invalid: {d['error']}")
             elif d["unused"]:
-                print(f"{d['path']}:{d['line']} deslop-ignore unused: {', '.join(d['unused'])} covers no hit")
+                print(f"{d['path']}:{d['line']} text-deslop-ignore unused: {', '.join(d['unused'])} covers no hit")
     s = result["summary"]
     tail = ""
     if "baseline" in s:

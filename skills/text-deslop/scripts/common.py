@@ -1,4 +1,4 @@
-"""Shared helpers for the deslop scripts. Standard library only."""
+"""Shared helpers for the text-deslop scripts. Standard library only."""
 import fnmatch
 import functools
 import hashlib
@@ -458,8 +458,8 @@ def load_snapshot(out):
     """Return a validated (snapshot, work_root) for a run directory."""
     out = _resolve_snapshot_path(Path(out), "run directory")
     snap = load_json(out / "snapshot.json")
-    if not isinstance(snap, dict) or snap.get("tool") != "deslop-snapshot":
-        raise ValueError("snapshot.json must be a deslop-snapshot object")
+    if not isinstance(snap, dict) or snap.get("tool") != "text-deslop-snapshot":
+        raise ValueError("snapshot.json must be a text-deslop-snapshot object")
     if snap.get("mode") not in ("copy", "in-place"):
         raise ValueError("snapshot.json: mode must be copy or in-place")
     if "workflow" in snap and snap["workflow"] != "compare-three":

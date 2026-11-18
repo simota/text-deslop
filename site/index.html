@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>deslop — 機械生成の文体を削り、書かれた事実だけを残すエージェントスキル &amp; 検出器</title>
-  <meta name="description" content="deslop は日本語・英語の Markdown と平文から、チャット応答の残骸、AI特有の過剰語彙、出典のない統計、水増しされた構造を取り除くエージェントスキル（Claude Code / Codex / Antigravity 対応）です。87の決定論的ルールと26の観点、事実保存検査（preserve_check.py）を備え、Python 3.10+ 標準ライブラリのみで動作します。">
-  <meta property="og:title" content="deslop — 機械生成の文体を削り、書かれた事実だけを残す">
+  <title>text-deslop — 機械生成の文体を削り、書かれた事実だけを残すエージェントスキル &amp; 検出器</title>
+  <meta name="description" content="text-deslop は日本語・英語の Markdown と平文から、チャット応答の残骸、AI特有の過剰語彙、出典のない統計、水増しされた構造を取り除くエージェントスキル（Claude Code / Codex / Antigravity 対応）です。87の決定論的ルールと26の観点、事実保存検査（preserve_check.py）を備え、Python 3.10+ 標準ライブラリのみで動作します。">
+  <meta property="og:title" content="text-deslop — 機械生成の文体を削り、書かれた事実だけを残す">
   <meta property="og:description" content="87の決定論的ルール＋26の構造・内容観点。原文にない事実は1文字も足さず、数値・URL・コードブロックの生存を契約検査（contract_check.py）で保証する日英対応エージェントスキル。">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ja_JP">
@@ -16,7 +16,7 @@
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "deslop",
+    "name": "text-deslop",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "macOS, Linux, Windows (Python 3.10+)",
     "description": "An agent skill and deterministic prose linter that rewrites Japanese and English documents until nothing in them reads as machine-generated, without adding facts.",
@@ -35,9 +35,9 @@
   <!-- Header -->
   <header class="site-header">
     <div class="container header-inner">
-      <a href="#hero" class="brand-logo" aria-label="deslop トップへ">
+      <a href="#hero" class="brand-logo" aria-label="text-deslop トップへ">
         <span class="brand-mark" aria-hidden="true">d</span>
-        <span>deslop</span>
+        <span>text-deslop</span>
         <span class="brand-tag">JA / EN · stdlib</span>
       </a>
 
@@ -75,7 +75,7 @@
             <span class="nowrap">書かれた事実だけを残す。</span>
           </h1>
           <p class="hero-lead">
-            <code>deslop</code> は日本語と英語の Markdown・平文から、チャット応答の残骸、AI特有の宣伝語彙、出典のない統計、水増しされた段落構造を取り除くエージェントスキルです。原文にない事実は1文字も足さず、数値・URL・コードブロックの生存を <code>preserve_check.py</code> と <code>contract_check.py</code> で機械的に検証します。
+            <code>text-deslop</code> は日本語と英語の Markdown・平文から、チャット応答の残骸、AI特有の宣伝語彙、出典のない統計、水増しされた段落構造を取り除くエージェントスキルです。原文にない事実は1文字も足さず、数値・URL・コードブロックの生存を <code>preserve_check.py</code> と <code>contract_check.py</code> で機械的に検証します。
           </p>
 
           <div class="hero-cta-group">
@@ -261,7 +261,7 @@
           <div class="workbench-footer">
             <div class="workbench-footer-cmd">
               <span class="workbench-footer-label">CLI EQUIVALENT:</span>
-              <code id="workbench-cli-cmd">python3 skills/deslop/scripts/detect.py --genre general examples/before.ja.md</code>
+              <code id="workbench-cli-cmd">python3 skills/text-deslop/scripts/detect.py --genre general examples/before.ja.md</code>
             </div>
             <div class="workbench-footer-actions">
               <button type="button" class="copy-chip" data-copy-target="workbench-cli-cmd">コマンドをコピー</button>
@@ -280,7 +280,7 @@
           <span class="section-kicker">WHY SYNONYM SWAPS FAIL</span>
           <h2 class="section-title">単語の言い換えではなく、「内容 → 構造 → 語彙」<span class="nowrap">の順で削る</span></h2>
           <p class="section-desc">
-            「重要」を「肝心」に、「leverage」を「utilize」に置き換えても機械生成の臭いは消えません。<code>deslop</code> は語彙に触れる前に、まず文が運ぶ情報量と文書の骨格を検査します。
+            「重要」を「肝心」に、「leverage」を「utilize」に置き換えても機械生成の臭いは消えません。<code>text-deslop</code> は語彙に触れる前に、まず文が運ぶ情報量と文書の骨格を検査します。
           </p>
         </div>
 
@@ -312,7 +312,7 @@
                     <tr>
                       <th>検出される空疎な内容</th>
                       <th>判定ルール</th>
-                      <th>deslop の処置</th>
+                      <th>text-deslop の処置</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -365,7 +365,7 @@
                     <tr>
                       <th>検出される構造パターン</th>
                       <th>自動キュー / 規則</th>
-                      <th>deslop の処置</th>
+                      <th>text-deslop の処置</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -452,7 +452,7 @@
           <span class="section-kicker">DETERMINISTIC RUN CONTRACT</span>
           <h2 class="section-title">「AIが勝手に事実やコードを書き換える」を許さない<span class="nowrap">8フェーズ実行契約</span></h2>
           <p class="section-desc">
-            Claude Code、Codex、Antigravity のどのエージェントから実行しても同じ品質を保証するため、<code>deslop</code> は7つの Python スクリプトで各フェーズの入出力を縛り、中断した実行には <code>status.py</code> が次の手順を示し、最後に <code>contract_check.py</code> が原本スナップショットから再計算して合否を判定します。
+            Claude Code、Codex、Antigravity のどのエージェントから実行しても同じ品質を保証するため、<code>text-deslop</code> は7つの Python スクリプトで各フェーズの入出力を縛り、中断した実行には <code>status.py</code> が次の手順を示し、最後に <code>contract_check.py</code> が原本スナップショットから再計算して合否を判定します。
           </p>
         </div>
 
@@ -568,7 +568,7 @@
           <span class="section-kicker">COMPLETE RULE &amp; PERSPECTIVE ATLAS</span>
           <h2 class="section-title">全87決定論的ルール＋26観点の<span class="nowrap">リファレンス辞典</span></h2>
           <p class="section-desc">
-            <code>skills/deslop/scripts/rules.json</code> および <code>reference/patterns.md</code>・<code>structure.md</code>・<code>content.md</code> に定義されたすべての検査項目を検索・フィルタリングできます。
+            <code>skills/text-deslop/scripts/rules.json</code> および <code>reference/patterns.md</code>・<code>structure.md</code>・<code>content.md</code> に定義されたすべての検査項目を検索・フィルタリングできます。
           </p>
         </div>
 
@@ -604,7 +604,7 @@
               <details class="faq-item" open>
                 <summary>AI検出器（AI Detector）のスコアを回避するためのツールですか？</summary>
                 <div class="faq-answer">
-                  いいえ。<code>deslop</code> はAI検出器のスコアを目標とせず、スコアの報告も行いません。また、人間らしさを偽装するために意図的な誤字やスラング、不自然な改行を混ぜることも一切禁止しています。目的は「責任ある人間の著者が署名できる品質の文章にすること」であり、披露義務がある場面でのAI利用隠蔽は明確に拒否します。
+                  いいえ。<code>text-deslop</code> はAI検出器のスコアを目標とせず、スコアの報告も行いません。また、人間らしさを偽装するために意図的な誤字やスラング、不自然な改行を混ぜることも一切禁止しています。目的は「責任ある人間の著者が署名できる品質の文章にすること」であり、披露義務がある場面でのAI利用隠蔽は明確に拒否します。
                 </div>
               </details>
               <details class="faq-item" open>
@@ -622,7 +622,7 @@
               <details class="faq-item">
                 <summary>ファイルを書き換えずに「どこがAIっぽいか」だけ診断できますか？</summary>
                 <div class="faq-answer">
-                  できます。エージェントに「どこがAIっぽく読めるか診断して」と尋ねれば <code>DETECT</code> フェーズの後に停止し、ファイルを一切変更せずにヒット箇所と構造所見を報告します。また、CLIから <code>make detect TARGET=docs/</code> または <code>python3 skills/deslop/scripts/detect.py docs/</code> を単体実行することも可能です。
+                  できます。エージェントに「どこがAIっぽく読めるか診断して」と尋ねれば <code>DETECT</code> フェーズの後に停止し、ファイルを一切変更せずにヒット箇所と構造所見を報告します。また、CLIから <code>make detect TARGET=docs/</code> または <code>python3 skills/text-deslop/scripts/detect.py docs/</code> を単体実行することも可能です。
                 </div>
               </details>
               <details class="faq-item">
@@ -667,7 +667,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div>
-        <strong class="footer-brand">deslop</strong>
+        <strong class="footer-brand">text-deslop</strong>
         <span> — Remove every trace of machine-generated style without adding anything the document does not say.</span>
       </div>
       <div class="footer-links">

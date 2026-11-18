@@ -316,7 +316,7 @@ def check(out, record=None):
             d["acknowledged"] = d["kind"] != "code_block" and (path, d["kind"], d["value"]) in acked
             unacked += not d["acknowledged"]
         files.append({"path": path, "sha256": sha256_bytes(content), "diffs": diffs})
-    return {"tool": "deslop-preserve", "files": files, "unacknowledged": unacked}
+    return {"tool": "text-deslop-preserve", "files": files, "unacknowledged": unacked}
 
 
 def main(argv=None):

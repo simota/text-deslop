@@ -1,4 +1,4 @@
-# deslop
+# text-deslop
 
 An agent skill that rewrites documents until nothing in them reads as
 machine-generated, in what they say as much as in how they say it, without
@@ -114,7 +114,7 @@ make unlink
 ```
 
 Then ask your agent to remove the AI style from a document, or invoke
-`/deslop` in a slash-command host.
+`/text-deslop` in a slash-command host.
 
 The response shows the three approaches, scores and tradeoffs, then identifies
 the selected version. Short candidates can be shown in full; longer ones are
@@ -125,9 +125,9 @@ any integration decision and the prose character counts before and after.
 
 ```sh
 make detect TARGET=docs/
-python3 skills/deslop/scripts/detect.py --root . README.md docs/
-python3 skills/deslop/scripts/detect.py --genre article --genre docs/api.md=reference docs/
-python3 skills/deslop/scripts/detect.py --genre docs/reference=reference --genre docs/guides=tutorial docs/
+python3 skills/text-deslop/scripts/detect.py --root . README.md docs/
+python3 skills/text-deslop/scripts/detect.py --genre article --genre docs/api.md=reference docs/
+python3 skills/text-deslop/scripts/detect.py --genre docs/reference=reference --genre docs/guides=tutorial docs/
 ```
 
 Genre-exempt hits are still printed, marked with the genre. `--genre
@@ -144,7 +144,7 @@ Text that is not in a file can be piped in; `--stdin-name` gives it the path
 used for its genre and Markdown handling:
 
 ```sh
-pbpaste | python3 skills/deslop/scripts/detect.py - --stdin-name CHANGELOG.md
+pbpaste | python3 skills/text-deslop/scripts/detect.py - --stdin-name CHANGELOG.md
 ```
 
 ### Diagnose without rewriting
@@ -156,7 +156,7 @@ measures over their limits, the lines where perspective cues say to read
 first, and the exempt hits with their reasons.
 
 ```sh
-python3 skills/deslop/scripts/detect.py docs/ --format markdown > diagnosis.md
+python3 skills/text-deslop/scripts/detect.py docs/ --format markdown > diagnosis.md
 ```
 
 ### Choose the rules
@@ -169,8 +169,8 @@ A gate that should stop only chat residue (`I hope this helps`, `oaicite`
 tokens, unfilled `[placeholders]`) is one flag:
 
 ```sh
-python3 skills/deslop/scripts/detect.py docs/ --select artifact --format github
-python3 skills/deslop/scripts/detect.py --list-rules --select DEN
+python3 skills/text-deslop/scripts/detect.py docs/ --select artifact --format github
+python3 skills/text-deslop/scripts/detect.py --list-rules --select DEN
 ```
 
 The selection is recorded in the `--out` result. A rewrite run scans every
@@ -182,16 +182,16 @@ A hit that is right where it stands (a term of art, a name, a quoted
 tagline) can be accepted in the document, with its reason:
 
 ```markdown
-Robust statistics resist outliers. <!-- deslop-ignore EN-04: the field's term -->
+Robust statistics resist outliers. <!-- text-deslop-ignore EN-04: the field's term -->
 
-<!-- deslop-ignore EN-14, EN-04: the product's registered tagline -->
+<!-- text-deslop-ignore EN-14, EN-04: the product's registered tagline -->
 A comprehensive, seamless sync.
 
-<!-- deslop-ignore-file DEN-05: a glossary, one heading per term -->
+<!-- text-deslop-ignore-file DEN-05: a glossary, one heading per term -->
 ```
 
-`deslop-ignore` covers the line it shares with text, or else the next
-nonblank line; `deslop-ignore-file` covers the whole document, density rules
+`text-deslop-ignore` covers the line it shares with text, or else the next
+nonblank line; `text-deslop-ignore-file` covers the whole document, density rules
 included. Directives name rule IDs only and need a reason after the colon.
 Artifact rules cannot be ignored this way. Directives inside code do
 nothing, and a directive that covers no hit is listed as unused (a warning
@@ -206,27 +206,27 @@ once, commit it, and check against it; only hits the baseline does not hold
 fail. Lexical hits match by path, rule and text, one for one, so a second
 copy of an accepted phrase is new; density hits match by path and rule.
 When accepted hits disappear, the summary says so, and rerunning with
-`--baseline .deslop-baseline.json --out .deslop-baseline.json` over the same
+`--baseline .text-deslop-baseline.json --out .text-deslop-baseline.json` over the same
 paths, with no `--select` or `--ignore`, tightens the baseline in place; any
 new hits that run reports are accepted too. A narrowed scan counts as gone
 only the hits it could have found.
 
 ```sh
-python3 skills/deslop/scripts/detect.py docs/ --out .deslop-baseline.json   # once
-python3 skills/deslop/scripts/detect.py docs/ --baseline .deslop-baseline.json --format github
+python3 skills/text-deslop/scripts/detect.py docs/ --out .text-deslop-baseline.json   # once
+python3 skills/text-deslop/scripts/detect.py docs/ --baseline .text-deslop-baseline.json --format github
 ```
 
 `--format github` prints open hits as GitHub Actions error annotations on
 the changed lines and cues as notices; paths are relative to `--root`
 (default: the current directory), so run it from the repository root.
 For a readable summary on the job page, add a second step that appends the
-diagnosis: `detect.py docs/ --baseline .deslop-baseline.json --format
+diagnosis: `detect.py docs/ --baseline .text-deslop-baseline.json --format
 markdown >> "$GITHUB_STEP_SUMMARY"`.
 A rewrite run never takes a baseline: its contract accounts for every hit.
 
 ## Landing page
 
-Published at <https://simota.github.io/deslop/>. Pages serves the static
+Published at <https://simota.github.io/text-deslop/>. Pages serves the static
 files only, so pasted text there gets the browser's partial scan, labelled
 as such; the four bundled samples show their full `detect.py` scans. Run it
 locally for the complete detector:

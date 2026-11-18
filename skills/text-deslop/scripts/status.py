@@ -193,7 +193,7 @@ def collect(out):
                            problems, _cmd("contract_check.py", out)))
         complete = not problems
     first = next((s for s in steps if not s["done"]), None)
-    return {"tool": "deslop-status", "run": str(out), "complete": complete, "steps": steps,
+    return {"tool": "text-deslop-status", "run": str(out), "complete": complete, "steps": steps,
             "next": first and {"step": first["step"], "do": first["next"]}}
 
 

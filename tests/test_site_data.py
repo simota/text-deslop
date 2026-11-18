@@ -16,19 +16,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "site"))
-sys.path.insert(0, str(ROOT / "skills" / "deslop" / "scripts"))
+sys.path.insert(0, str(ROOT / "skills" / "text-deslop" / "scripts"))
 
 import build_data  # noqa: E402
 import serve  # noqa: E402
 
-SCRIPTS = ROOT / "skills" / "deslop" / "scripts"
+SCRIPTS = ROOT / "skills" / "text-deslop" / "scripts"
 HTML = (ROOT / "site" / "index.html").read_text(encoding="utf-8")
 APP = (ROOT / "site" / "app.js").read_text(encoding="utf-8")
 PAGE = HTML + APP
 
 
 def skill_phases():
-    table = (ROOT / "skills" / "deslop" / "SKILL.md").read_text(encoding="utf-8").split("## Phases", 1)[1].split("\n## ", 1)[0]
+    table = (ROOT / "skills" / "text-deslop" / "SKILL.md").read_text(encoding="utf-8").split("## Phases", 1)[1].split("\n## ", 1)[0]
     return re.findall(r"^\| ([A-Z]+) \|", table, re.M)
 
 

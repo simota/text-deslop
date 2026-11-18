@@ -63,7 +63,7 @@ class ReadConsistencyTests(RunFixture):
 
         with patch.object(detect, "scan_snapshot", scan_and_change):
             report, _ = findings.build_report(self.out)
-        self.assertIn(f"deslop:findings-sha256={original_digest}", report)
+        self.assertIn(f"text-deslop:findings-sha256={original_digest}", report)
         self.assertIn("assessor: test", report)
         self.assertNotIn(changed["meta"]["assessor"], report)
 

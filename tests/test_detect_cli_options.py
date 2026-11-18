@@ -11,7 +11,7 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES = ROOT / "examples"
-sys.path.insert(0, str(ROOT / "skills" / "deslop" / "scripts"))
+sys.path.insert(0, str(ROOT / "skills" / "text-deslop" / "scripts"))
 
 import detect  # noqa: E402
 
@@ -164,7 +164,7 @@ class DetectOptionTests(unittest.TestCase):
         code, _, err = self.run_detect(self.docs, "--baseline", bad)
         self.assertEqual(code, 2)
         self.assertIn("not a detect.py result", err)
-        bad.write_text(json.dumps({"tool": "deslop-detect", "hits": [{"path": "x"}]}))
+        bad.write_text(json.dumps({"tool": "text-deslop-detect", "hits": [{"path": "x"}]}))
         self.assertEqual(self.run_detect(self.docs, "--baseline", bad)[0], 2)
         self.assertEqual(self.run_detect("--snapshot", self.tmp, "--baseline", bad)[0], 2)
 
@@ -174,9 +174,9 @@ class DetectOptionTests(unittest.TestCase):
         code, out, _ = self.run_detect(self.docs, "--root", self.tmp, "--format", "github")
         self.assertEqual(code, 1)
         lines = out.splitlines()
-        self.assertIn("::error file=docs/guide.md,line=3,col=1,title=deslop ART-01::"
+        self.assertIn("::error file=docs/guide.md,line=3,col=1,title=text-deslop ART-01::"
                       "Chat reply opener left in the document: Certainly!", lines)
-        self.assertTrue(any(line.startswith("::notice file=docs/guide.md,line=23,title=deslop STR-02 cue::")
+        self.assertTrue(any(line.startswith("::notice file=docs/guide.md,line=23,title=text-deslop STR-02 cue::")
                             for line in lines))
         self.assertTrue(all(line.startswith(("::error ", "::notice ")) for line in lines))
 

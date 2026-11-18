@@ -1,10 +1,10 @@
 /* ==========================================================================
-   deslop — Interactive Proofing & Detector Engine (Client + Live API)
+   text-deslop — Interactive Proofing & Detector Engine (Client + Live API)
    ========================================================================== */
 (function () {
   "use strict";
 
-  const DATA = window.DESLOP_DATA || { rules: [], perspectives: [], genres: [], samples: {} };
+  const DATA = window.TEXT_DESLOP_DATA || { rules: [], perspectives: [], genres: [], samples: {} };
 
   const GENRE_DETAILS = {
     general: {
@@ -13,7 +13,7 @@
       remove: "87ルールおよび26観点に該当するすべての機械生成表現・水増し構造",
       adjust: "デフォルト密度上限（太字 3.0/1000字、見出し 5.0/1000字、リスト比率 0.6）",
       corpus: "corpus/general/weekly-meeting-minutes-ja.md (2,389字: 6 hits → 6 open, 0 exempt)",
-      cmd: "python3 skills/deslop/scripts/detect.py --genre general corpus/general/weekly-meeting-minutes-ja.md"
+      cmd: "python3 skills/text-deslop/scripts/detect.py --genre general corpus/general/weekly-meeting-minutes-ja.md"
     },
     readme: {
       title: "README (リポジトリ導入文書)",
@@ -21,7 +21,7 @@
       remove: "抽象的なタグライン、形容詞を並べた「Why X?」節、末尾の勧誘文",
       adjust: "DEN-06（リスト比率）免除 / DEN-05（見出し密度）上限を 8.0/1000字へ緩和",
       corpus: "corpus/readme/date-utils-readme-ja.md (554字: 2 hits → 2 open, リスト比率は自動免除)",
-      cmd: "python3 skills/deslop/scripts/detect.py README.md"
+      cmd: "python3 skills/text-deslop/scripts/detect.py README.md"
     },
     reference: {
       title: "API / CLI Reference (仕様・リファレンス)",
@@ -29,7 +29,7 @@
       remove: "物語調の導入文、重要性の主張（「重要な役割を果たします」）、未確認仕様の無断断定",
       adjust: "DEN-01（太字）、DEN-04（太字ラベル箇条書き）、DEN-05（見出し）、DEN-06（リスト）、DEN-08（文長均一性）を免除",
       corpus: "corpus/reference/deploy-cli-reference-ja.md (878字: 4 hits → 3 open, 1 genre-exempt)",
-      cmd: "python3 skills/deslop/scripts/detect.py --genre reference corpus/reference/deploy-cli-reference-ja.md"
+      cmd: "python3 skills/text-deslop/scripts/detect.py --genre reference corpus/reference/deploy-cli-reference-ja.md"
     },
     tutorial: {
       title: "Tutorial (手順を追う入門記事)",
@@ -37,7 +37,7 @@
       remove: "ステップ間の道案内（「次に〜を見ていきましょう」）、読者への賞賛、まとめ節での反復",
       adjust: "DEN-05（見出し）・DEN-06（リスト）を免除 / DEN-03（感嘆符）上限を 0 に厳格化",
       corpus: "corpus/tutorial/github-actions-ci-tutorial-ja.md (1,682字: 4 hits → 3 open, 1 genre-exempt)",
-      cmd: "python3 skills/deslop/scripts/detect.py --genre tutorial corpus/tutorial/github-actions-ci-tutorial-ja.md"
+      cmd: "python3 skills/text-deslop/scripts/detect.py --genre tutorial corpus/tutorial/github-actions-ci-tutorial-ja.md"
     },
     article: {
       title: "Blog / Article (技術記事・論考)",
@@ -45,7 +45,7 @@
       remove: "SEO型見出し（「〜とは？」）、FAQ水増し、本文を繰り返すだけの「## まとめ」",
       adjust: "DEN-01 上限 1.5 / DEN-04 上限 0 / DEN-05 上限 3.0 / DEN-06 上限 0.3（散文中心を強制）",
       corpus: "corpus/article/code-review-ja.md (1,728字: 8 hits → 8 open, 太字箇条書きとまとめ反復を検出)",
-      cmd: "python3 skills/deslop/scripts/detect.py --genre article corpus/article/code-review-ja.md"
+      cmd: "python3 skills/text-deslop/scripts/detect.py --genre article corpus/article/code-review-ja.md"
     },
     spec: {
       title: "Spec / RFC (要件定義・設計書)",
@@ -53,7 +53,7 @@
       remove: "要件に対する曖昧なぼかし、宣伝調の導入",
       adjust: "DEN-05・DEN-06・DEN-08 を免除 / DEN-03（感嘆符）上限を 0 に厳格化",
       corpus: "corpus/spec/equipment-requirements-ja.md (2,609字: 6 hits → 4 open, 2 genre-exempt)",
-      cmd: "python3 skills/deslop/scripts/detect.py --genre spec corpus/spec/equipment-requirements-ja.md"
+      cmd: "python3 skills/text-deslop/scripts/detect.py --genre spec corpus/spec/equipment-requirements-ja.md"
     },
     pr: {
       title: "PR Description (プルリクエスト説明文)",
@@ -61,7 +61,7 @@
       remove: "空欄のまま残されたテンプレート節、1文だけの節に対する見出し、装飾絵文字",
       adjust: "DEN-06（変更点の箇条書き）免除 / DEN-03（感嘆符）・DEN-10（水平線）上限を 0 に厳格化",
       corpus: "corpus/pr/login-validation-pr-ja.md (465字: 0 hits → 0 open, 簡潔な変更箇条書きを正当と判定。26行で折りたたみなしのため STR-17 をキュー)",
-      cmd: "python3 skills/deslop/scripts/detect.py --genre pr corpus/pr/login-validation-pr-ja.md"
+      cmd: "python3 skills/text-deslop/scripts/detect.py --genre pr corpus/pr/login-validation-pr-ja.md"
     },
     message: {
       title: "Email / Message (人宛ての連絡・メール)",
@@ -69,7 +69,7 @@
       remove: "AIチャットの結び（「参考になれば幸いです」）、依頼内容のくどい言い直し、過剰な謝罪の重ね掛け",
       adjust: "EN-20・JA-21（問い合わせへの誘い）を免除 / DEN-04 上限 0、DEN-05 上限 0、DEN-06 上限 0.3",
       corpus: "corpus/message/invoice-misdelivery-apology-ja.md (776字: 0 hits → 0 open, 業務連絡の慣習を保持)",
-      cmd: "python3 skills/deslop/scripts/detect.py --genre message corpus/message/invoice-misdelivery-apology-ja.md"
+      cmd: "python3 skills/text-deslop/scripts/detect.py --genre message corpus/message/invoice-misdelivery-apology-ja.md"
     },
     changelog: {
       title: "Changelog (リリースノート・変更履歴)",
@@ -77,7 +77,7 @@
       remove: "変更点に添えられた宣伝形容詞（「革新的な」「強力な新機能」）",
       adjust: "DEN-05（見出し）・DEN-06（リスト）・DEN-08（文長均一性）を免除（CHANGELOG* 等はファイル名で自動判定）",
       corpus: "corpus/changelog/app-store-release-notes-ja.md (539字: 0 hits → 0 open)",
-      cmd: "python3 skills/deslop/scripts/detect.py CHANGELOG.md"
+      cmd: "python3 skills/text-deslop/scripts/detect.py CHANGELOG.md"
     },
     template: {
       title: "Template (利用者が埋める様式・下書き)",
@@ -85,7 +85,7 @@
       remove: "チャット応答の残骸、入力欄の周囲の水増し文、勝手に埋められた架空の値",
       adjust: "ART-07（未入力プレースホルダ：唯一ジャンル免除が許されるartifactルール）・DEN-04（太字ラベル）を免除",
       corpus: "corpus/template/checkout-postmortem-en.md (3,081字: 54 hits → 2 open, 52個の入力欄とラベルを正当免除)",
-      cmd: "python3 skills/deslop/scripts/detect.py --genre template corpus/template/checkout-postmortem-en.md"
+      cmd: "python3 skills/text-deslop/scripts/detect.py --genre template corpus/template/checkout-postmortem-en.md"
     },
     prompt: {
       title: "AI Prompt / Instructions (AIへの指示・プロンプト)",
@@ -93,7 +93,7 @@
       remove: "「世界最高峰の〜」型の人物設定、基準のない努力・品質の要求（「あらゆる観点から深く思考し」）、圧力や報酬、強調の重ね掛け、言い換えた指示の重複。満たす条件のない品質語は文書内の条件に置き換え、条件がなければ作者への質問として残す（STR-18）",
       adjust: "DEN-04（ラベル付き箇条書き）・DEN-05（見出し）・DEN-06（リスト）・DEN-08（文長均一性）を免除 / DEN-01（太字）上限 1.5、DEN-03（感嘆符）上限 0（AGENTS.md・CLAUDE.md・*.prompt.md はファイル名で自動判定）",
       corpus: "corpus/prompt/code-review-system-prompt-ja.md (1,729字: 0 hits → 0 open, 目的・優先順位・制約・出力形式が揃った仕様型プロンプトを正当と判定)",
-      cmd: "python3 skills/deslop/scripts/detect.py --genre prompt corpus/prompt/code-review-system-prompt-ja.md"
+      cmd: "python3 skills/text-deslop/scripts/detect.py --genre prompt corpus/prompt/code-review-system-prompt-ja.md"
     }
   };
 
@@ -108,10 +108,10 @@
         "以降の detect.py / preserve_check.py / contract_check.py はすべてこの原本と比較",
         "ファイル名から README* は readme、CHANGELOG* は changelog を自動推論"
       ],
-      code: `$ python3 skills/deslop/scripts/snapshot.py /tmp/deslop-run \\
+      code: `$ python3 skills/text-deslop/scripts/snapshot.py /tmp/text-deslop-run \\
     --root . --genre article examples/before.ja.md
 
-# /tmp/deslop-run/snapshot.json
+# /tmp/text-deslop-run/snapshot.json
 {
   "version": 1,
   "root": "/Users/you/project",
@@ -156,8 +156,8 @@
         "文書形状から13種の構造・内容観点（予告開幕、まとめ反復、3項目リスト偏重など）を自動キュー出し",
         "「どこがAIっぽいか教えて」とだけ聞かれた場合はこのフェーズで停止し、ファイルを一切変更しない"
       ],
-      code: `$ python3 skills/deslop/scripts/detect.py \\
-    --snapshot /tmp/deslop-run --out /tmp/deslop-run/detect.before.json
+      code: `$ python3 skills/text-deslop/scripts/detect.py \\
+    --snapshot /tmp/text-deslop-run --out /tmp/text-deslop-run/detect.before.json
 
 examples/before.ja.md:1:22 JA-06 最大限に引き出
 examples/before.ja.md:1:30 JA-14 完全ガイド
@@ -248,11 +248,11 @@ TTL は \`ttl_seconds\` で指定し、既定値は 300 秒です。
         "preserve_check.py が Exit 0（数値・URL・コードブロックの無断変更 0）であること",
         "全文を通し読みする Cold Read と、サブエージェント利用可能時のブラインド独立読解を実施"
       ],
-      code: `$ python3 skills/deslop/scripts/detect.py --snapshot /tmp/deslop-run \\
-    --exempt /tmp/deslop-run/findings.json --out /tmp/deslop-run/detect.after.json
+      code: `$ python3 skills/text-deslop/scripts/detect.py --snapshot /tmp/text-deslop-run \\
+    --exempt /tmp/text-deslop-run/findings.json --out /tmp/text-deslop-run/detect.after.json
 1 files, 0 hits, 0 open, 0 exempt, 0 cues (exit 0)
 
-$ python3 skills/deslop/scripts/preserve_check.py /tmp/deslop-run
+$ python3 skills/text-deslop/scripts/preserve_check.py /tmp/text-deslop-run
 # 数値 (300, 10000)、URL (https://example.com/tilecache/docs)、
 # インラインコード (tilecache, ttl_seconds, max_entries)、TOMLコードブロックの生存を確認
 # 削除した装飾統計「30」は preservation の理由記録と照合 → exit 0`
@@ -267,10 +267,10 @@ $ python3 skills/deslop/scripts/preserve_check.py /tmp/deslop-run
         "contract_check.py はキャッシュを信用せず original/ と作業コピーをゼロから再スキャン",
         "全87ルール・全26観点・全事実保存の整合性が取れたときのみ `contract ok` (exit 0)"
       ],
-      code: `$ python3 skills/deslop/scripts/findings.py report /tmp/deslop-run
+      code: `$ python3 skills/text-deslop/scripts/findings.py report /tmp/text-deslop-run
 report.md written; 0 open hits
 
-$ python3 skills/deslop/scripts/contract_check.py /tmp/deslop-run
+$ python3 skills/text-deslop/scripts/contract_check.py /tmp/text-deslop-run
 contract ok`
     }
   ];
@@ -278,39 +278,39 @@ contract ok`
   const HOST_COMMANDS = {
     all: {
       label: "すべての導入済みエージェントに一括リンク（Claude Code / Codex / Antigravity）",
-      install: `git clone https://github.com/simota/deslop.git
-cd deslop
+      install: `git clone https://github.com/simota/text-deslop.git
+cd text-deslop
 make link`,
       verify: `make status
 make check`
     },
     claude: {
-      label: "Claude Code (~/.claude/skills/deslop) のみにリンク",
+      label: "Claude Code (~/.claude/skills/text-deslop) のみにリンク",
       install: `make link AGENT=claude
 # または特定リポジトリの .claude/skills に導入する場合:
 make link PROJECT=/path/to/your/repo`,
       verify: `# Claude Code チャット内で実行:
-/deslop docs/ README.md`
+/text-deslop docs/ README.md`
     },
     codex: {
-      label: "Codex (~/.codex/skills/deslop) のみにリンク",
+      label: "Codex (~/.codex/skills/text-deslop) のみにリンク",
       install: `make link AGENT=codex`,
       verify: `# Codex 実行時に指示:
 "README.md と docs/ から AI 文体を除去して"`
     },
     agy: {
-      label: "Antigravity (~/.gemini/antigravity-cli/skills/deslop) のみにリンク",
+      label: "Antigravity (~/.gemini/antigravity-cli/skills/text-deslop) のみにリンク",
       install: `make link AGENT=agy`,
       verify: `# Antigravity チャット内で指示:
-"deslop スキルで docs/ の記事を推敲して"`
+"text-deslop スキルで docs/ の記事を推敲して"`
     },
     cli: {
       label: "エージェントを使わず、検出器 (detect.py) を単体CLI・CIとして実行",
       install: `# Python 3.10+ 標準ライブラリのみで即実行可能（pip install 不要）
 make detect TARGET=docs/
-python3 skills/deslop/scripts/detect.py --root . README.md docs/`,
+python3 skills/text-deslop/scripts/detect.py --root . README.md docs/`,
       verify: `# ジャンル指定付き実行（終了コード 0 = ヒットなし / 1 = ヒットあり）:
-python3 skills/deslop/scripts/detect.py --genre article --genre docs/api.md=reference docs/`
+python3 skills/text-deslop/scripts/detect.py --genre article --genre docs/api.md=reference docs/`
     }
   };
 
@@ -760,7 +760,7 @@ python3 skills/deslop/scripts/detect.py --genre article --genre docs/api.md=refe
 
     if (cliCmdEl) {
       const targetPath = sample ? sample.shortLabel : "docs/target.md";
-      cliCmdEl.textContent = `python3 skills/deslop/scripts/detect.py --genre ${currentGenre} ${targetPath}`;
+      cliCmdEl.textContent = `python3 skills/text-deslop/scripts/detect.py --genre ${currentGenre} ${targetPath}`;
     }
 
     // The diagnosis is detect.py's --format markdown; the browser fallback has none.
@@ -791,7 +791,7 @@ python3 skills/deslop/scripts/detect.py --genre article --genre docs/api.md=refe
         if (sample && sample.after) {
           leftContainer.innerHTML = `<div class="annotated-preview" tabindex="0" role="region" aria-label="書き換え後の文書">${renderAnnotatedText(sample.after, sample.after_scan || { hits: [], cues: [] })}</div>`;
         } else {
-          leftContainer.innerHTML = `<div class="annotated-preview is-note" tabindex="0" role="region" aria-label="書き換え後の文書">このコーパス文書は入力専用サンプル（<code>corpus/</code>）です。エージェントで <code>/deslop</code> を実行すると、右ペインの検出ヒットと構造キューに基づき、事実を保持したまま推敲された文書が出力されます。</div>`;
+          leftContainer.innerHTML = `<div class="annotated-preview is-note" tabindex="0" role="region" aria-label="書き換え後の文書">このコーパス文書は入力専用サンプル（<code>corpus/</code>）です。エージェントで <code>/text-deslop</code> を実行すると、右ペインの検出ヒットと構造キューに基づき、事実を保持したまま推敲された文書が出力されます。</div>`;
         }
       } else {
         leftContainer.innerHTML = `<div class="annotated-preview" tabindex="0" role="region" aria-label="検出ヒットを示した文書">${renderAnnotatedText(currentText, result)}</div>`;

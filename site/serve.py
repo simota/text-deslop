@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Zero-dependency HTTP server for the deslop landing page and live detector API.
+"""Zero-dependency HTTP server for the text-deslop landing page and live detector API.
 
 Serves static files from site/ and exposes:
   POST /api/detect   {"text": str, "genre": str, "markdown": bool}
@@ -8,7 +8,7 @@ It answers 200 with the scan and its Markdown diagnosis, 400 for a body that is 
 or has a bad Content-Length, 404 for other paths, 413 above MAX_BODY bytes
 and 500, logged to stderr, when the detector itself fails.
 
-Uses the Python 3.10+ standard library and skills/deslop/scripts/detect.py.
+Uses the Python 3.10+ standard library and skills/text-deslop/scripts/detect.py.
 """
 import argparse
 import http.server
@@ -21,7 +21,7 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = Path(__file__).resolve().parent
-SCRIPTS = ROOT / "skills" / "deslop" / "scripts"
+SCRIPTS = ROOT / "skills" / "text-deslop" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 import detect  # noqa: E402
@@ -54,7 +54,7 @@ def run_detection(text: str, genre_id: str = "general", markdown: bool = True) -
             "summary": result["summary"], "diagnosis": diagnosis.render(result, RULES, outlines)}
 
 
-class DeslopHandler(http.server.SimpleHTTPRequestHandler):
+class TextDeslopHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(SITE), **kwargs)
 
@@ -62,7 +62,7 @@ class DeslopHandler(http.server.SimpleHTTPRequestHandler):
         """Requests are not logged; errors are, through log_error."""
 
     def log_error(self, fmt, *args):
-        sys.stderr.write(f"deslop LP server: {fmt % args}\n")
+        sys.stderr.write(f"text-deslop LP server: {fmt % args}\n")
 
     def _send_json(self, status: int, payload: dict):
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -119,8 +119,8 @@ def main(argv=None):
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8765)
     args = ap.parse_args(argv)
-    server = http.server.ThreadingHTTPServer((args.host, args.port), DeslopHandler)
-    print(f"deslop LP server listening on http://{args.host}:{args.port}")
+    server = http.server.ThreadingHTTPServer((args.host, args.port), TextDeslopHandler)
+    print(f"text-deslop LP server listening on http://{args.host}:{args.port}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

@@ -202,7 +202,7 @@ class MakefilePathSafetyTests(RunFixture):
     def setUp(self):
         super().setUp()
         self.checkout = self.base / "checkout with spaces and 'quotes'"
-        self.skill = self.checkout / "skills" / "deslop"
+        self.skill = self.checkout / "skills" / "text-deslop"
         self.skill.mkdir(parents=True)
         self.makefile = self.checkout / "Makefile"
         shutil.copyfile(Path(__file__).resolve().parents[1] / "Makefile", self.makefile)
@@ -222,7 +222,7 @@ class MakefilePathSafetyTests(RunFixture):
             with self.subTest(outside=outside):
                 result = self.run_make("link", outside)
                 self.assertEqual(result.returncode, 0, result.stderr)
-                installed = self.host / "deslop"
+                installed = self.host / "text-deslop"
                 self.assertTrue(installed.is_symlink())
                 self.assertEqual(installed.readlink(), self.skill)
                 self.assertTrue(installed.is_dir())
@@ -234,7 +234,7 @@ class MakefilePathSafetyTests(RunFixture):
                 self.assertFalse(installed.is_symlink())
 
     def test_unlink_keeps_a_foreign_symlink(self):
-        installed = self.host / "deslop"
+        installed = self.host / "text-deslop"
         foreign = self.base / "other-skill"
         foreign.mkdir()
         installed.symlink_to(foreign)
@@ -252,7 +252,7 @@ class MakefilePathSafetyTests(RunFixture):
                      target, f"SKILLS_DIR={self.host}"], cwd=self.base,
                     capture_output=True, text=True, timeout=10)
                 self.assertEqual(result.returncode, 0, result.stderr)
-                installed = self.host / "deslop"
+                installed = self.host / "text-deslop"
                 if target == "link":
                     self.assertEqual(installed.readlink(), self.skill)
                     self.assertTrue(installed.is_dir())
@@ -261,10 +261,10 @@ class MakefilePathSafetyTests(RunFixture):
 
     def test_newline_checkout_paths_fail_before_creating_or_removing_links(self):
         checkout = self.base / "checkout\nwith newline"
-        (checkout / "skills/deslop").mkdir(parents=True)
+        (checkout / "skills/text-deslop").mkdir(parents=True)
         makefile = checkout / "Makefile"
         shutil.copyfile(self.makefile, makefile)
-        installed = self.host / "deslop"
+        installed = self.host / "text-deslop"
         for outside in (False, True):
             for target in ("link", "unlink"):
                 with self.subTest(outside=outside, target=target):
@@ -290,7 +290,7 @@ class MakefilePathSafetyTests(RunFixture):
                                 capture_output=True, text=True, timeout=10)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("cannot resolve", result.stderr)
-        self.assertFalse((self.host / "deslop").is_symlink())
+        self.assertFalse((self.host / "text-deslop").is_symlink())
 
 
 if __name__ == "__main__":

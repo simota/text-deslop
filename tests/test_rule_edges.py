@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "skills" / "deslop" / "scripts"))
+sys.path.insert(0, str(ROOT / "skills" / "text-deslop" / "scripts"))
 
 import detect  # noqa: E402
 from common import load_rules, read_text  # noqa: E402

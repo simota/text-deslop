@@ -2,11 +2,11 @@
 
 An author who keeps a flagged phrase on purpose can say so where it stands:
 
-    <!-- deslop-ignore EN-04: "robust statistics" is the field's term -->
-    <!-- deslop-ignore-file DEN-05, DEN-06: a glossary, one heading per term -->
+    <!-- text-deslop-ignore EN-04: "robust statistics" is the field's term -->
+    <!-- text-deslop-ignore-file DEN-05, DEN-06: a glossary, one heading per term -->
 
-`deslop-ignore` covers the line it shares with other text, or else the next
-nonblank line after the comment. `deslop-ignore-file` covers the whole
+`text-deslop-ignore` covers the line it shares with other text, or else the next
+nonblank line after the comment. `text-deslop-ignore-file` covers the whole
 document, density rules included. A directive names rule IDs only, never a
 tier or family, and must give a reason after the colon. Artifact rules
 cannot be ignored this way: chat residue is exempt only inside a quotation.
@@ -21,7 +21,7 @@ accounts for every hit in findings.json.
 import bisect
 import re
 
-DIRECTIVE = re.compile(r"<!--[ \t]*deslop-ignore(?P<file>-file)?(?![\w-])(?P<body>[\s\S]*?)-->")
+DIRECTIVE = re.compile(r"<!--[ \t]*text-deslop-ignore(?P<file>-file)?(?![\w-])(?P<body>[\s\S]*?)-->")
 RULE_ID = re.compile(r"[A-Z]{2,4}-\d{2}")
 
 
@@ -36,7 +36,7 @@ def find(code_masked, tiers):
     directive records, and the (start, end) offsets of every directive
     comment, so hits inside them can be dropped.
     """
-    matches = list(DIRECTIVE.finditer(code_masked)) if "deslop-ignore" in code_masked else []
+    matches = list(DIRECTIVE.finditer(code_masked)) if "text-deslop-ignore" in code_masked else []
     if not matches:
         return [], []
     starts = _line_starts(code_masked)
@@ -51,7 +51,7 @@ def find(code_masked, tiers):
         rules = [r.strip() for r in names.replace(",", " ").split()]
         reason = " ".join(reason.split())
         if not colon or not reason:
-            record["error"] = "give a reason after a colon: deslop-ignore RULE: why it stays"
+            record["error"] = "give a reason after a colon: text-deslop-ignore RULE: why it stays"
         elif not rules:
             record["error"] = "name at least one rule ID before the colon"
         elif bad := [r for r in rules if not RULE_ID.fullmatch(r) or r not in tiers]:

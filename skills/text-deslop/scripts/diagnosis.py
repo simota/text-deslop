@@ -50,7 +50,7 @@ def render(result, rules, outlines=None):
     names = {p["id"]: p["name"] for p in rules["perspectives"]}
     genres = {g["id"]: g["name"] for g in rules["genres"]}
     s = result["summary"]
-    out = ["# deslop diagnosis", ""]
+    out = ["# text-deslop diagnosis", ""]
     head = (f"{s['files']} documents, {s['total']} hits: **{s['open']} open**, {s['exempt']} exempt; "
             f"{s['cues']} perspective cues.")
     if "baseline" in s:

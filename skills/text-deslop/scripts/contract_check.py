@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check that a run directory meets the deslop run contract.
+"""Check that a run directory meets the text-deslop run contract.
 
     contract_check.py <out>
 

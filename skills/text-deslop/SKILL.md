@@ -1,5 +1,5 @@
 ---
-name: deslop
+name: text-deslop
 description: "Rewrite Japanese and English documents to remove AI style without adding or losing facts. Produce three complete restructurings, review and score them, combine their strengths when that improves the result, then verify the best version in the author's voice. Use to de-AI, humanize or clean up docs, READMEs, articles, PR text or AI prompts."
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 ---
@@ -99,7 +99,7 @@ choose differently, the choice is fixed here, and `scripts/contract_check.py
 | Resuming a run, or unsure what is left | `scripts/status.py <out>`; continue from its `next:` line. Do not start a new run directory for documents already snapshotted |
 | The text is too short or constrained for three different structures | Still compare three complete versions using the useful choices available, such as information placement and sentence grouping. Explain any unavoidable overlap in `review_note` and `limitations`; do not add material to manufacture differences |
 | Target files have uncommitted changes, or are not in Git | Copy mode. In-place only after the requester confirms they have a way back |
-| A document carries `<!-- deslop-ignore … -->` directives | They serve standalone detector gates. A run does not read them: account for those hits like any other, and use a directive's reason as evidence for an exemption only when it names the occurrence |
+| A document carries `<!-- text-deslop-ignore … -->` directives | They serve standalone detector gates. A run does not read them: account for those hits like any other, and use a directive's reason as evidence for an exemption only when it names the occurrence |
 | A hit is in quoted material (a customer quote, a transcript, a cited source) | Leave the quotation as it is and exempt it with that reason |
 | A hit is a convention of the genre (a README's install steps as a list, `MUST` in a spec, a changelog's bullets) | Give the document its genre at snapshot; the genre exempts its own conventions. One the genre does not cover: keep it, exempt the hit with the genre named, and still apply the sentence- and word-level rules |
 | Unsure which genre a document is | Choose by what the reader does with it (follows steps, looks up a name, reads an argument, replies). Between two, take the stricter one; `general` when none fits |
